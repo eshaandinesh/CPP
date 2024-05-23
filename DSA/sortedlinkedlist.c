@@ -7,9 +7,15 @@ struct Node
     struct Node *next;
 };
 
-void add(struct Node **head_ref, int val)
+int add(struct Node **head_ref, int val)
 {
+    int retval = 1;
     struct Node *newnode = (struct Node *)malloc(sizeof(struct Node));
+    if(NULL == newnode)
+    {
+        retval = 0;
+        return retval;
+    }
     newnode->data = val;
     newnode->next = NULL;
 
@@ -40,29 +46,43 @@ void add(struct Node **head_ref, int val)
                 prev->next = newnode;
             }
         }
-        
     }
+    return retval;
 }
 
-void delete(struct Node **head_ref, int pos)
+int delete(struct Node **head_ref, int pos)
 {
+    int retVal = 1;
     struct Node *temp = *head_ref, *prev;
-    if (pos == 0 && temp != NULL)
+    if (temp == NULL)
+    {
+        retVal = 0;
+        return retVal;
+    }
+    if (pos == 0)
     {
         *head_ref = temp->next;
-        free(temp);
-        return;
+        free(temp);    
+        return retVal; 
     }
-    for (int i = 0; i != pos - 1 && temp != NULL; i++) 
+    for (int i = 0; i != pos - 1; i++) 
     {
-        temp = temp->next;
+        if (temp == NULL)
+        {
+            retVal = 0;
+            return retVal;
+        }
+        else
+        {
+            temp = temp->next;
+        }
     }
-    if (temp == NULL)
-        return;
 
-    struct Node *nextnode = temp->next; 
-    temp->next = temp->next->next;      
+    struct Node *nextnode = temp->next;
+    temp->next = temp->next->next;
     free(nextnode);
+
+    return retVal;
 }
 
 void display(struct Node *head) 
@@ -76,7 +96,7 @@ void display(struct Node *head)
     printf("\n");
 }
 
-void search(struct Node *head, int val)
+int search(struct Node *head, int val)
 {
     int i = 0;
     struct Node *ptr = head;
@@ -85,12 +105,13 @@ void search(struct Node *head, int val)
         if (ptr->data == val)
         {
             printf("Data found at %d position\n", i);
-            return;
+            return i;
         }
         ptr = ptr->next;
         i++;
     }
     printf("Data not in list\n");
+    return -1;
 }
 
 int main()
