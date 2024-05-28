@@ -78,6 +78,7 @@ int insertIn(struct Node **head_ref, struct Node **tail_ref, int val, int pos)
     if ((pos < 0) || (*head_ref == NULL && pos > 0))
     {
         retval = 0;
+        free(newnode);
     }
     else if (pos == 0)
     {
@@ -102,6 +103,7 @@ int insertIn(struct Node **head_ref, struct Node **tail_ref, int val, int pos)
             if (ptr->next == NULL)
             {
                 retval = 0;
+                free(newnode);
                 return retval;
             }
             ptr = ptr->next;
