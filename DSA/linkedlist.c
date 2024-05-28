@@ -69,6 +69,7 @@ int insert(struct Node **head_ref, int val, int pos)
     if (pos < 0) // invalid input
     {
         retVal = 0;
+        free(newnode);
     }
     else if (pos == 0) // if temp is 0
     {
@@ -92,6 +93,7 @@ int insert(struct Node **head_ref, int val, int pos)
             if (temp->next == NULL)
             {
                 retVal = 0;
+                free(newnode);
                 return retVal;
             }
         }
@@ -136,15 +138,50 @@ int delete(struct Node **head_ref, int pos)
     return retVal;
 }
 
+int reverse(struct Node **head_ref)
+{
+    struct Node *pre = NULL;
+    struct Node *nex = NULL;
+    struct Node *cur = *head_ref;
+    while (cur != NULL)
+    {
+        nex = cur->next; // setting next node
+        cur->next = pre; // setting the pointer of current node to point to previous node
+        pre = cur;       // moving prev pointer to curr position
+        cur = nex;       // moving curr pointer to next position
+    }
+    *head_ref = pre; // pointing head to prev which points to cur which is the last node
+    return 1;
+}
+
 void display(struct Node *head) // no changes being done hence only single pointer
 {
-    struct Node *ptr = head;
-    while (ptr != NULL) // loops till end
+    // struct Node *ptr = head;
+    // while (ptr != NULL) // loops till end
+    // {
+    //     printf("%d  ", ptr->data);
+    //     ptr = ptr->next;
+    // }
+    // printf("\n");
+
+    // using recursion
+    if (NULL == head)
     {
-        printf("%d  ", ptr->data);
-        ptr = ptr->next;
+        printf("\n");
+        return;
     }
-    printf("\n");
+    printf("%d  ", head->data);
+    display(head->next);
+}
+
+void revDisplay(struct Node *head)
+{
+    if (NULL == head)
+    {
+        return;
+    }
+    revDisplay(head->next);
+    printf("%d  ", head->data);
 }
 
 int search(struct Node *head, int val)
@@ -179,7 +216,15 @@ int main()
     display(head);
     delete (&head, 2);
     display(head);
+
     search(head, 3);
+
+    display(head);
+    reverse(&head);
+    display(head);
+
+    revDisplay(head);
+    printf("\n");
 
     return 0;
 }
